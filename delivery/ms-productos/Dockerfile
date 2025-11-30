@@ -8,8 +8,8 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY common ./common
 
-# Código Específico (MS-USUARIOS)
-COPY delivery/ms-usuarios ./delivery/ms-usuarios
+# Código Específico
+COPY delivery/ms-productos ./delivery/ms-productos
 
 # Instalación y Build
 RUN pnpm install --frozen-lockfile
@@ -17,14 +17,18 @@ RUN pnpm install --frozen-lockfile
 WORKDIR /app/common
 RUN pnpm run build
 
-WORKDIR /app/delivery/ms-usuarios
+# Build del Servicio
+WORKDIR /app/delivery/ms-productos
 RUN ../../node_modules/.bin/nest build
 
 # --- STAGE 2: RUNNER ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 
+# Copiar dependencias
 COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/delivery/ms-usuarios/dist ./dist
+
+# Copiar build 
+COPY --from=builder /app/delivery/ms-productos/dist ./dist
 
 CMD ["node", "dist/main.js"]
