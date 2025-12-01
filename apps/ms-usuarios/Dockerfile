@@ -19,9 +19,11 @@ RUN pnpm install --frozen-lockfile
 # 5. Construir librería común
 RUN pnpm --filter @ukiyo/common run build
 
-# 6. Construir microservicio desde raíz
-WORKDIR /app
+# 6. Construir microservicio
 RUN pnpm --filter ms-usuarios run build
+
+# Verificar estructura (debug)
+RUN ls -la /app/dist/apps/ms-usuarios || echo "No existe dist/apps/ms-usuarios"
 
 # --- RUNNER ---
 FROM node:20-alpine AS runner
@@ -32,7 +34,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/libs ./libs
 
 # 8. Copiar build del microservicio
-COPY --from=builder /app/dist/apps/ms-usuarios ./dist
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/apps/ms-usuarios/package.json ./package.json
 
-CMD ["node", "dist/apps/ms-usuarios/src/main.js"]
+CMD ["node", "dist/apps/ms-usuarios/apps/ms-usuarios/src/main.js"]
