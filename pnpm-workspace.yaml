@@ -1,4 +1,3 @@
 packages:
-  - 'common'
-  - 'delivery/**'
-  - 'catering/**'
+  - 'apps/*'
+  - 'libs/*'

@@ -1,196 +1,167 @@
 version: '3.8'
 
 services:
-  # ==============================================================================
-  # DELIVERY
-  # ==============================================================================
-
-  # --- GATEWAY DELIVERY ---
-  gateway_delivery:
+  # --- GATEWAY ---
+  api-gateway:
     build:
       context: .
-      dockerfile: delivery/api-gateway/Dockerfile
-    container_name: gateway_delivery_container
+      dockerfile: apps/api-gateway/Dockerfile
+    container_name: gateway_container
     restart: always
     ports:
       - "3000:3000" # Puerto Público HTTP
     environment:
       - PORT=3000
       # Conexión con Microservicios Delivery
-      - USUARIOS_HOST=ms_usuarios_del
+      - USUARIOS_HOST=ms_usuarios
       - USUARIOS_PORT=3001
-      - CLIENTES_HOST=ms_clientes_del
+      - CLIENTES_HOST=ms_clientes
       - CLIENTES_PORT=3002
-      - PRODUCTOS_HOST=ms_productos_del
+      - PRODUCTOS_HOST=ms_productos
       - PRODUCTOS_PORT=3003
-      - INVENTARIO_HOST=ms_inventario_del
-      - INVENTARIO_PORT=3004
-      - PROVEEDORES_HOST=ms_proveedores_del
-      - PROVEEDORES_PORT=3005
-      - PEDIDOS_HOST=ms_pedidos_del
-      - PEDIDOS_PORT=3006
+      - PROVEEDORES_HOST=ms_proveedores
+      - PROVEEDORES_PORT=3004
+      - PEDIDOS_DEL_HOST=ms_pedidos_del
+      - PEDIDOS_DEL_PORT=3005
+      - INVENTARIO_HOST=ms_inventario
+      - INVENTARIO_PORT=3006
+      - PEDIDOS_CAT_HOST=ms_pedidos_cat
+      - PEDIDOS_CAT_PORT=3007
+      - EVENTO_HOST=ms_evento
+      - EVENTO_PORT=3008
     depends_on:
-      - ms_usuarios_del
-      - ms_clientes_del
-      - ms_productos_del
-      - ms_inventario_del
-      - ms_proveedores_del
+      - ms_usuarios
+      - ms_clientes
+      - ms_productos
+      - ms_proveedores
       - ms_pedidos_del
+      - ms_inventario
+      - ms_pedido_cat
+      - ms_evento
     networks: [backend_network]
 
-  # --- MS USUARIOS (DELIVERY) ---
-  db_usuarios_del:
+  # --- MS USUARIOS ---
+  db_usuarios:
     image: postgres:15-alpine
-    container_name: db_usuarios_del_container
+    container_name: db_usuarios_container
     restart: always
     environment:
       POSTGRES_USER: user_usuarios
       POSTGRES_PASSWORD: password_usuarios
       POSTGRES_DB: bd_usuarios
     volumes:
-      - usuarios_del_data:/var/lib/postgresql/data
+      - usuarios_data:/var/lib/postgresql/data
     ports:
       - "5435:5432" # DBeaver
     networks: [backend_network]
 
-  ms_usuarios_del:
+  ms_usuarios:
     build:
       context: .
-      dockerfile: delivery/ms-usuarios/Dockerfile
-    container_name: ms_usuarios_del_container
+      dockerfile: apps/ms-usuarios/Dockerfile
+    container_name: ms_usuarios_container
     restart: always
     environment:
       - MS_PORT=3001
-      - DB_HOST=db_usuarios_del
+      - DB_HOST=db_usuarios
       - DB_PORT=5432
       - DB_USERNAME=user_usuarios
       - DB_PASSWORD=password_usuarios
       - DB_DATABASE=bd_usuarios
-    depends_on: [db_usuarios_del]
+    depends_on: [db_usuarios]
     networks: [backend_network]
 
-  # --- MS CLIENTES (DELIVERY) ---
-  db_clientes_del:
+  # --- MS CLIENTES ---
+  db_clientes:
     image: postgres:15-alpine
-    container_name: db_clientes_del_container
+    container_name: db_clientes_container
     restart: always
     environment:
       POSTGRES_USER: user_clientes
       POSTGRES_PASSWORD: password_clientes
       POSTGRES_DB: bd_clientes
     volumes:
-      - clientes_del_data:/var/lib/postgresql/data
+      - clientes_data:/var/lib/postgresql/data
     ports:
       - "5434:5432" # DBeaver
     networks: [backend_network]
 
-  ms_clientes_del:
+  ms_clientes:
     build:
       context: .
-      dockerfile: delivery/ms-clientes/Dockerfile
-    container_name: ms_clientes_del_container
+      dockerfile: apps/ms-clientes/Dockerfile
+    container_name: ms_clientes_container
     restart: always
     environment:
       - MS_PORT=3002
-      - DB_HOST=db_clientes_del
+      - DB_HOST=db_clientes
       - DB_PORT=5432
       - DB_USERNAME=user_clientes
       - DB_PASSWORD=password_clientes
       - DB_DATABASE=bd_clientes
-    depends_on: [db_clientes_del]
+    depends_on: [db_clientes]
     networks: [backend_network]
 
-  # --- MS PRODUCTOS (DELIVERY) ---
-  db_productos_del:
+  # --- MS PRODUCTOS  ---
+  db_productos:
     image: postgres:15-alpine
-    container_name: db_productos_del_container
+    container_name: db_productos_container
     restart: always
     environment:
       POSTGRES_USER: user_productos
       POSTGRES_PASSWORD: password_productos
       POSTGRES_DB: bd_productos
     volumes:
-      - productos_del_data:/var/lib/postgresql/data
+      - productos_data:/var/lib/postgresql/data
     ports:
       - "5436:5432" # DBeaver
     networks: [backend_network]
 
-  ms_productos_del:
+  ms_productos:
     build:
       context: .
-      dockerfile: delivery/ms-productos/Dockerfile
-    container_name: ms_productos_del_container
+      dockerfile: apps/ms-productos/Dockerfile
+    container_name: ms_productos_container
     restart: always
     environment:
       - MS_PORT=3003
-      - DB_HOST=db_productos_del
+      - DB_HOST=db_productos
       - DB_PORT=5432
       - DB_USERNAME=user_productos
       - DB_PASSWORD=password_productos
       - DB_DATABASE=bd_productos
-    depends_on: [db_productos_del]
+    depends_on: [db_productos]
     networks: [backend_network]
 
-  # --- MS INVENTARIO (DELIVERY) ---
-  db_inventario_del:
+  # --- MS PROVEEDORES ---
+  db_proveedores:
     image: postgres:15-alpine
-    container_name: db_inventario_del_container
-    restart: always
-    environment:
-      POSTGRES_USER: user_inventario
-      POSTGRES_PASSWORD: password_inventario
-      POSTGRES_DB: bd_inventario
-    volumes:
-      - inventario_del_data:/var/lib/postgresql/data
-    ports:
-      - "5437:5432" # DBeaver
-    networks: [backend_network]
-
-  ms_inventario_del:
-    build:
-      context: .
-      dockerfile: delivery/ms-inventario/Dockerfile
-    container_name: ms_inventario_del_container
-    restart: always
-    environment:
-      - MS_PORT=3004
-      - DB_HOST=db_inventario_del
-      - DB_PORT=5432
-      - DB_USERNAME=user_inventario
-      - DB_PASSWORD=password_inventario
-      - DB_DATABASE=bd_inventario
-    depends_on: [db_inventario_del]
-    networks: [backend_network]
-
-  # --- MS PROVEEDORES (DELIVERY) ---
-  db_proveedores_del:
-    image: postgres:15-alpine
-    container_name: db_proveedores_del_container
+    container_name: db_proveedores_container
     restart: always
     environment:
       POSTGRES_USER: user_proveedores
       POSTGRES_PASSWORD: password_proveedores
       POSTGRES_DB: bd_proveedores
     volumes:
-      - proveedores_del_data:/var/lib/postgresql/data
+      - proveedores_data:/var/lib/postgresql/data
     ports:
       - "5438:5432" # DBeaver
     networks: [backend_network]
 
-  ms_proveedores_del:
+  ms_proveedores:
     build:
       context: .
-      dockerfile: delivery/ms-proveedores/Dockerfile
-    container_name: ms_proveedores_del_container
+      dockerfile: apps/ms-proveedores/Dockerfile
+    container_name: ms_proveedores_container
     restart: always
     environment:
       - MS_PORT=3005
-      - DB_HOST=db_proveedores_del
+      - DB_HOST=db_proveedores
       - DB_PORT=5432
       - DB_USERNAME=user_proveedores
       - DB_PASSWORD=password_proveedores
       - DB_DATABASE=bd_proveedores
-    depends_on: [db_proveedores_del]
+    depends_on: [db_proveedores]
     networks: [backend_network]
 
   # --- MS PEDIDOS (DELIVERY) ---
@@ -211,7 +182,7 @@ services:
   ms_pedidos_del:
     build:
       context: .
-      dockerfile: delivery/ms-pedidos/Dockerfile
+      dockerfile: apps/ms-pedidos/Dockerfile
     container_name: ms_pedidos_del_container
     restart: always
     environment:
@@ -224,129 +195,35 @@ services:
     depends_on: [db_pedidos_del]
     networks: [backend_network]
 
-
-  # ==============================================================================
-  # CATERING
-  # ==============================================================================
-
-  # --- GATEWAY CATERING ---
-  gateway_catering:
-    build:
-      context: .
-      dockerfile: catering/api-gateway/Dockerfile
-    container_name: gateway_catering_container
-    restart: always
-    ports:
-      - "4000:3000" # Puerto Público HTTP (4000)
-    environment:
-      - PORT=3000
-      # Conexión con Microservicios Catering
-      - USUARIOS_HOST=ms_usuarios_cat
-      - USUARIOS_PORT=4001
-      - CLIENTES_HOST=ms_clientes_cat
-      - CLIENTES_PORT=4002
-      - EVENTOS_HOST=ms_evento_cat
-      - EVENTOS_PORT=4003
-      - PEDIDOS_HOST=ms_pedido_cat
-      - PEDIDOS_PORT=4004
-    depends_on:
-      - ms_usuarios_cat
-      - ms_clientes_cat
-      - ms_evento_cat
-      - ms_pedido_cat
-    networks: [backend_network]
-
-  # --- MS USUARIOS (CATERING) ---
-  db_usuarios_cat:
+  # --- MS INVENTARIO ---
+  db_inventario:
     image: postgres:15-alpine
-    container_name: db_usuarios_cat_container
+    container_name: db_inventario_container
     restart: always
     environment:
-      POSTGRES_USER: user_cat_users
-      POSTGRES_PASSWORD: password_cat_users
-      POSTGRES_DB: bd_cat_usuarios
+      POSTGRES_USER: user_inventario
+      POSTGRES_PASSWORD: password_inventario
+      POSTGRES_DB: bd_inventario
     volumes:
-      - usuarios_cat_data:/var/lib/postgresql/data
+      - inventario_data:/var/lib/postgresql/data
     ports:
-      - "5440:5432" # DBeaver
+      - "5437:5432" # DBeaver
     networks: [backend_network]
 
-  ms_usuarios_cat:
+  ms_inventario:
     build:
       context: .
-      dockerfile: catering/ms-usuarios/Dockerfile
-    container_name: ms_usuarios_cat_container
+      dockerfile: apps/ms-inventario/Dockerfile
+    container_name: ms_inventario_container
     restart: always
     environment:
-      - MS_PORT=4001
-      - DB_HOST=db_usuarios_cat
+      - MS_PORT=3004
+      - DB_HOST=db_inventario
       - DB_PORT=5432
-      - DB_USERNAME=user_cat_users
-      - DB_PASSWORD=password_cat_users
-      - DB_DATABASE=bd_cat_usuarios
-    depends_on: [db_usuarios_cat]
-    networks: [backend_network]
-
-  # --- MS CLIENTES (CATERING) ---
-  db_clientes_cat:
-    image: postgres:15-alpine
-    container_name: db_clientes_cat_container
-    restart: always
-    environment:
-      POSTGRES_USER: user_cat_clients
-      POSTGRES_PASSWORD: password_cat_clients
-      POSTGRES_DB: bd_cat_clientes
-    volumes:
-      - clientes_cat_data:/var/lib/postgresql/data
-    ports:
-      - "5441:5432" # DBeaver
-    networks: [backend_network]
-
-  ms_clientes_cat:
-    build:
-      context: .
-      dockerfile: catering/ms-clientes/Dockerfile
-    container_name: ms_clientes_cat_container
-    restart: always
-    environment:
-      - MS_PORT=4002
-      - DB_HOST=db_clientes_cat
-      - DB_PORT=5432
-      - DB_USERNAME=user_cat_clients
-      - DB_PASSWORD=password_cat_clients
-      - DB_DATABASE=bd_cat_clientes
-    depends_on: [db_clientes_cat]
-    networks: [backend_network]
-
-  # --- MS EVENTO (CATERING) ---
-  db_evento_cat:
-    image: postgres:15-alpine
-    container_name: db_evento_cat_container
-    restart: always
-    environment:
-      POSTGRES_USER: user_cat_event
-      POSTGRES_PASSWORD: password_cat_event
-      POSTGRES_DB: bd_cat_evento
-    volumes:
-      - evento_cat_data:/var/lib/postgresql/data
-    ports:
-      - "5442:5432" # DBeaver
-    networks: [backend_network]
-
-  ms_evento_cat:
-    build:
-      context: .
-      dockerfile: catering/ms-evento/Dockerfile
-    container_name: ms_evento_cat_container
-    restart: always
-    environment:
-      - MS_PORT=4003
-      - DB_HOST=db_evento_cat
-      - DB_PORT=5432
-      - DB_USERNAME=user_cat_event
-      - DB_PASSWORD=password_cat_event
-      - DB_DATABASE=bd_cat_evento
-    depends_on: [db_evento_cat]
+      - DB_USERNAME=user_inventario
+      - DB_PASSWORD=password_inventario
+      - DB_DATABASE=bd_inventario
+    depends_on: [db_inventario]
     networks: [backend_network]
 
   # --- MS PEDIDO (CATERING) ---
@@ -367,7 +244,7 @@ services:
   ms_pedido_cat:
     build:
       context: .
-      dockerfile: catering/ms-pedido/Dockerfile
+      dockerfile: apps/ms-pedido/Dockerfile
     container_name: ms_pedido_cat_container
     restart: always
     environment:
@@ -380,21 +257,49 @@ services:
     depends_on: [db_pedido_cat]
     networks: [backend_network]
 
+  # --- MS EVENTO ---
+  db_evento:
+    image: postgres:15-alpine
+    container_name: db_evento_container
+    restart: always
+    environment:
+      POSTGRES_USER: user_event
+      POSTGRES_PASSWORD: password_event
+      POSTGRES_DB: bd_evento
+    volumes:
+      - evento_data:/var/lib/postgresql/data
+    ports:
+      - "5442:5432" # DBeaver
+    networks: [backend_network]
+
+  ms_evento:
+    build:
+      context: .
+      dockerfile: apps/ms-evento/Dockerfile
+    container_name: ms_evento_container
+    restart: always
+    environment:
+      - MS_PORT=4003
+      - DB_HOST=db_evento
+      - DB_PORT=5432
+      - DB_USERNAME=user_event
+      - DB_PASSWORD=password_event
+      - DB_DATABASE=bd_evento
+    depends_on: [db_evento]
+    networks: [backend_network]
+
 
 # --- VOLÚMENES PARA PERSISTENCIA DE DATOS ---
 volumes:
-  # Delivery
-  usuarios_del_data:
-  clientes_del_data:
-  productos_del_data:
-  inventario_del_data:
-  proveedores_del_data:
+  # Apps
+  usuarios_data:
+  clientes_data:
+  productos_data:
+  proveedores_data:
   pedidos_del_data:
-  # Catering
-  usuarios_cat_data:
-  clientes_cat_data:
-  evento_cat_data:
+  inventario_data:
   pedido_cat_data:
+  evento_data:
 
 # --- RED COMPARTIDA ---
 networks:
