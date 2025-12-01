@@ -2,53 +2,36 @@ import 'dotenv/config';
 import * as joi from 'joi';
 
 interface EnvVars {
-    MS_PORT: number;
-    
-    // Base de Datos
-    DB_HOST: string;
-    DB_PORT: number;
-    DB_USERNAME: string;
-    DB_PASSWORD: string;
-    DB_DATABASE: string;
+    USUARIOS_TCP_PORT: number;
+    USUARIOS_DB_HOST: string;
+    USUARIOS_DB_PORT: number;
+    USUARIOS_DB_USER: string;
+    USUARIOS_DB_PASS: string;
+    USUARIOS_DB_NAME: string;
+}
 
-    // Otros servicios
-    CLIENTES_HOST: string;
-    CLIENTES_PORT: number;
-    }
+const envsSchema = joi.object({
+    USUARIOS_TCP_PORT: joi.number().required(),
+    USUARIOS_DB_HOST: joi.string().required(),
+    USUARIOS_DB_PORT: joi.number().required(),
+    USUARIOS_DB_USER: joi.string().required(),
+    USUARIOS_DB_PASS: joi.string().required(),
+    USUARIOS_DB_NAME: joi.string().required(),
+}).unknown(true);
 
-    const envsSchema = joi.object({
-    MS_PORT: joi.number().required(),
-    
-    DB_HOST: joi.string().required(),
-    DB_PORT: joi.number().required(),
-    DB_USERNAME: joi.string().required(),
-    DB_PASSWORD: joi.string().required(),
-    DB_DATABASE: joi.string().required(),
+const { error, value } = envsSchema.validate(process.env);
 
-    CLIENTES_HOST: joi.string().required(),
-    CLIENTES_PORT: joi.number().required(),
-    })
-    .unknown(true);
+if (error) throw new Error(`Config validation error: ${error.message}`);
 
-    const { error, value } = envsSchema.validate(process.env);
+const envVars: EnvVars = value;
 
-    if (error) {
-    throw new Error(`Config validation error: ${error.message}`);
-    }
-
-    const envVars: EnvVars = value;
-
-    export const envs = {
-    port: envVars.MS_PORT,
+export const envs = {
+    port: envVars.USUARIOS_TCP_PORT,
     db: {
-        host: envVars.DB_HOST,
-        port: envVars.DB_PORT,
-        username: envVars.DB_USERNAME,
-        password: envVars.DB_PASSWORD,
-        name: envVars.DB_DATABASE,
+        host: envVars.USUARIOS_DB_HOST,
+        port: envVars.USUARIOS_DB_PORT,
+        username: envVars.USUARIOS_DB_USER,
+        password: envVars.USUARIOS_DB_PASS,
+        database: envVars.USUARIOS_DB_NAME,
     },
-    clientes: {
-        host: envVars.CLIENTES_HOST,
-        port: envVars.CLIENTES_PORT,
-    }
 };
