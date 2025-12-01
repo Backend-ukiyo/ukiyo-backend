@@ -28,10 +28,11 @@ RUN ../../node_modules/.bin/nest build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# 7. Copiar dependencias
+# 1. Copiar node_modules
 COPY --from=builder /app/node_modules ./node_modules
 
-# 8. Copiar build
-COPY --from=builder /app/apps/ms-usuarios/dist ./dist
+# 2. Copiar TODO el dist generado (más seguro para depurar)
+COPY --from=builder /app/dist ./dist
 
-CMD ["node", "dist/main.js"]
+# 3. Ajustar el comando de arranque
+CMD ["node", "dist/apps/ms-usuarios/main.js"]
