@@ -4,32 +4,34 @@ FROM node:20-alpine AS builder
 RUN npm install -g pnpm
 WORKDIR /app
 
-# 1. Copiar configuración
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json nest-cli.json ./
+# 1. Copiar configuración raíz
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# 2. Copiar librería
+# 2. Copiar librería común
 COPY libs/common ./libs/common
 
-# 3. Copiar servicio
+# 3. Copiar microservicio
 COPY apps/ms-usuarios ./apps/ms-usuarios
 
-# 4. Instalar
+# 4. Instalar dependencias
 RUN pnpm install --frozen-lockfile
 
-# 5. Construir Common (Desde la raíz usando filtro)
+# 5. Construir librería común
 RUN pnpm --filter @ukiyo/common run build
 
-# 6. Construir el Microservicio
-RUN pnpm --filter ms-usuarios run build
+# 6. Construir microservicio
+RUN cd apps/ms-usuarios && pnpm run build
 
 # --- RUNNER ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# 7. Copiar dependencias
+# 7. Copiar node_modules
 COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/libs ./libs
 
-# 8. Copiar desde la ruta estándar
-COPY --from=builder /app/dist/apps/ms-usuarios ./dist
+# 8. Copiar build del microservicio
+COPY --from=builder /app/apps/ms-usuarios/dist ./dist
+COPY --from=builder /app/apps/ms-usuarios/package.json ./package.json
 
-CMD ["node", "dist/apps/ms-usuarios/src/main.js"]
+CMD ["node", "dist/main.js"]
