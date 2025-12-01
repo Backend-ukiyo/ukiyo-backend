@@ -17,7 +17,7 @@ COPY apps/ms-usuarios ./apps/ms-usuarios
 RUN pnpm install --frozen-lockfile
 
 # 5. Construir Common (Desde la raíz usando filtro)
-RUN pnpm run build --filter @ukiyo/common
+RUN pnpm --filter @ukiyo/common run build
 
 # 6. Construir el Microservicio DESDE LA RAÍZ
 RUN node_modules/.bin/nest build ms-usuarios
