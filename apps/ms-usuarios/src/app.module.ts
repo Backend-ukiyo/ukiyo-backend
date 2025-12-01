@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './modulos/usuarios/usuarios.module';
-import { Usuario } from '@ukiyo/common';
+import { Usuario } from '../../../libs/common/src';
 import { envs } from '../config/envs';
 
 @Module({
@@ -16,7 +16,7 @@ import { envs } from '../config/envs';
       port: envs.db.port,
       username: envs.db.username,
       password: envs.db.password,
-      database: envs.db.name,
+      database: envs.db.database,
       entities: [Usuario],
       synchronize: true, // true para desarrollo, false para producción
       autoLoadEntities: true,
