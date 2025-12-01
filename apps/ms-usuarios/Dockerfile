@@ -5,7 +5,7 @@ RUN npm install -g pnpm
 WORKDIR /app
 
 # 1. Copiar configuración
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json nest-cli.json ./
 
 # 2. Copiar librería
 COPY libs/common ./libs/common
@@ -19,8 +19,8 @@ RUN pnpm install --frozen-lockfile
 # 5. Construir Common (Desde la raíz usando filtro)
 RUN pnpm --filter @ukiyo/common run build
 
-# 6. Construir el Microservicio DESDE LA RAÍZ
-RUN node_modules/.bin/nest build ms-usuarios
+# 6. Construir el Microservicio
+RUN pnpm --filter ms-usuarios run build
 
 # --- RUNNER ---
 FROM node:20-alpine AS runner
