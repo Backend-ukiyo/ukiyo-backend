@@ -32,6 +32,6 @@ WORKDIR /app
 COPY --from=builder /app/node_modules ./node_modules
 
 # 8. Copiar build
-COPY --from=builder /app/dist/apps/ms-usuarios ./dist
+COPY --from=builder /app/apps/ms-usuarios/dist ./dist
 
 CMD ["node", "dist/main.js"]
