@@ -19,19 +19,20 @@ RUN pnpm install --frozen-lockfile
 # 5. Construir librería común
 RUN pnpm --filter @ukiyo/common run build
 
-# 6. Construir microservicio
-RUN cd apps/ms-usuarios && pnpm run build
+# 6. Construir microservicio desde raíz
+WORKDIR /app
+RUN pnpm --filter ms-usuarios run build
 
 # --- RUNNER ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# 7. Copiar node_modules
+# 7. Copiar node_modules y libs
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/libs ./libs
 
 # 8. Copiar build del microservicio
-COPY --from=builder /app/apps/ms-usuarios/dist ./dist
+COPY --from=builder /app/dist/apps/ms-usuarios ./dist
 COPY --from=builder /app/apps/ms-usuarios/package.json ./package.json
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/apps/ms-usuarios/src/main.js"]

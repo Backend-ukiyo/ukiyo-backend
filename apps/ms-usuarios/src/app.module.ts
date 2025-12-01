@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './modulos/usuarios/usuarios.module';
-import { Usuario } from '../../../libs/common/src';
+import { Usuario } from './modulos/usuarios/entities/ms-usuario.entity';
 import { envs } from '../config/envs';
 
 @Module({

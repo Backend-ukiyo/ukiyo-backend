@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosService } from './usuarios.service';
 import { UsuariosController } from './usuarios.controller';
-import { Usuario } from '@ukiyo/common';
+import { Usuario } from './entities/ms-usuario.entity';
 
 @Module({
   imports: [
