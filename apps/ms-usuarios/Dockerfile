@@ -4,35 +4,32 @@ FROM node:20-alpine AS builder
 RUN npm install -g pnpm
 WORKDIR /app
 
-# 1. Copiar configuración del Monorepo
+# 1. Copiar configuración
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
-# 2. Copiar la librería compartida
+# 2. Copiar librería
 COPY libs/common ./libs/common
 
-# 3. Copiar EL CÓDIGO DE ESTE SERVICIO
+# 3. Copiar servicio
 COPY apps/ms-usuarios ./apps/ms-usuarios
 
-# 4. Instalar dependencias
+# 4. Instalar
 RUN pnpm install --frozen-lockfile
 
-# 5. Construir Common
-WORKDIR /app/libs/common
-RUN pnpm run build
+# 5. Construir Common (Desde la raíz usando filtro)
+RUN pnpm run build --filter @ukiyo/common
 
-# 6. Construir el Microservicio
-WORKDIR /app/apps/ms-usuarios
-RUN ../../node_modules/.bin/nest build
+# 6. Construir el Microservicio DESDE LA RAÍZ
+RUN node_modules/.bin/nest build ms-usuarios
 
 # --- RUNNER ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# 1. Copiar node_modules
+# 7. Copiar dependencias
 COPY --from=builder /app/node_modules ./node_modules
 
-# 2. Copiar TODO el dist generado (más seguro para depurar)
-COPY --from=builder /app/dist ./dist
+# 8. Copiar desde la ruta estándar
+COPY --from=builder /app/dist/apps/ms-usuarios ./dist
 
-# 3. Ajustar el comando de arranque
-CMD ["node", "dist/apps/ms-usuarios/main.js"]
+CMD ["node", "dist/main.js"]
