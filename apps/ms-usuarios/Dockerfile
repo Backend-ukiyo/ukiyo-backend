@@ -32,4 +32,4 @@ COPY --from=builder /app/node_modules ./node_modules
 # 8. Copiar desde la ruta estándar
 COPY --from=builder /app/dist/apps/ms-usuarios ./dist
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/apps/ms-usuarios/src/main.js"]
