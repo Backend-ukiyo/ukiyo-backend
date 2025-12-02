@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db_usuarios:
+    image: postgres:15-alpine
+    container_name: db_usuarios_local
+    restart: always
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: user_usuarios
+      POSTGRES_PASSWORD: password_usuarios
+      POSTGRES_DB: bd_usuarios
+    volumes:
+      - usuarios_data_local:/var/lib/postgresql/data
+
+volumes:
+  usuarios_data_local:
