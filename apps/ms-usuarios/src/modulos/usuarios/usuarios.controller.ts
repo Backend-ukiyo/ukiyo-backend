@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { UsuariosService } from './usuarios.service';
-import { CreateUsuarioDto, UpdateUsuarioDto } from '@ukiyo/common';
+import { CreateUsuarioDto, UpdateUsuarioDto } from '../../../../../libs/common/src/dto';
 
 @Controller()
 export class UsuariosController {

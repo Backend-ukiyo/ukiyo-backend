@@ -1,42 +1,71 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CreateUsuarioDto } from '@ukiyo/common';
-import { Usuario } from './entities/ms-usuario.entity';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { CreateUsuarioDto, UpdateUsuarioDto } from '../../../../../libs/common/src';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
-export class UsuariosService {
+export class UsuariosService implements OnModuleInit {
+  private readonly logger = new Logger(UsuariosService.name);
+
   constructor(
-    @InjectRepository(Usuario)
-    private usuariosRepository: Repository<Usuario>,
+    private readonly prisma: PrismaService,
   ) {}
 
-  async create(createDto: CreateUsuarioDto): Promise<Usuario> {
-    const usuario = this.usuariosRepository.create({
-      username: createDto.username,
-      password: createDto.password,
-      rol: createDto.rol || 'cliente',
-      esEmpleado: createDto.esEmpleado || false,
-      clienteId: createDto.clienteId,
+  async onModuleInit() {
+    this.logger.log('Conectado a la base de datos con Prisma');
+  }
+
+  async create(createDto: CreateUsuarioDto) {
+    this.logger.log(`Creando usuario: ${createDto.username}`);
+
+    try {
+      return await this.prisma.usuario.create({
+        data: {
+          username: createDto.username,
+          passwordHash: createDto.password, 
+          rol: createDto.rol || 'cliente',
+          esEmpleado: createDto.esEmpleado || false,
+          clienteId: createDto.clienteId,
+        },
+      });
+    } catch (error) {
+      throw new RpcException(error);
+    }
+  }
+
+  async findAll() {
+    return await this.prisma.usuario.findMany();
+  }
+
+  async findOne(id: string) {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { id },
     });
-    return await this.usuariosRepository.save(usuario);
+
+    if (!usuario) {
+      return null; 
+    }
+
+    return usuario;
   }
 
-  async findAll(): Promise<Usuario[]> {
-    return await this.usuariosRepository.find();
+  async update(id: string, updateDto: UpdateUsuarioDto) {
+    const { id: __, ...data } = updateDto;
+
+    if (data.password) {
+      (data as any).passwordHash = data.password;
+      delete data.password;
+    }
+
+    return await this.prisma.usuario.update({
+      where: { id },
+      data: data,
+    });
   }
 
-  async findOne(id: string): Promise<Usuario | null> {
-    return await this.usuariosRepository.findOne({ where: { id } });
+  async remove(id: string) {
+    return await this.prisma.usuario.delete({
+      where: { id },
+    });
   }
-
-  async update(id: string, updateDto: Partial<CreateUsuarioDto>): Promise<Usuario | null> {
-    await this.usuariosRepository.update(id, updateDto);
-    return this.findOne(id);
-  }
-
-  async remove(id: string): Promise<void> {
-    await this.usuariosRepository.delete(id);
-  }
-
 }

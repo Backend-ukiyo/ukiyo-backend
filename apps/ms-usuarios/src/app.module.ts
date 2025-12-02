@@ -1,28 +1,19 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsuariosModule } from './modulos/usuarios/usuarios.module';
-import { Usuario } from './modulos/usuarios/entities/ms-usuario.entity';
-import { envs } from '../config/envs';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: 'apps/ms-usuarios/.env',
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: envs.db.host,
-      port: envs.db.port,
-      username: envs.db.username,
-      password: envs.db.password,
-      database: envs.db.database,
-      entities: [Usuario],
-      synchronize: true, // true para desarrollo, false para producción
-      autoLoadEntities: true,
-    }),
-
+    // PrismaModule se importa dentro de UsuariosModule
     UsuariosModule,
   ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

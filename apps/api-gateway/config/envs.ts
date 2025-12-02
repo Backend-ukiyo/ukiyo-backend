@@ -1,5 +1,14 @@
-import 'dotenv/config';
 import * as joi from 'joi';
+
+    if (process.env.NODE_ENV !== 'production') {
+
+    const path = require('path');
+
+    const dotenv = require('dotenv');
+
+    const envFilePath = path.resolve(process.cwd(), 'apps/api-gateway/.env');
+    dotenv.config({ path: envFilePath });
+}
 
 interface EnvVars {
     GATEWAY_PORT: number;
@@ -13,10 +22,13 @@ interface EnvVars {
     GATEWAY_PORT: joi.number().required(),
     USUARIOS_TCP_PORT: joi.number().required(),
     USUARIOS_HOST: joi.string().required(), 
-    }).unknown(true);
+    })
+    .unknown(true);
 
     const { error, value } = envsSchema.validate(process.env);
+
     if (error) throw new Error(`Config validation error: ${error.message}`);
+    
     const envVars: EnvVars = value;
 
     export const envs = {

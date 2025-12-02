@@ -66,6 +66,7 @@ services:
       - USUARIOS_DB_USER=user_usuarios
       - USUARIOS_DB_PASS=password_usuarios
       - USUARIOS_DB_NAME=bd_usuarios
+      - DATABASE_URL=postgresql://user_usuarios:password_usuarios@db_usuarios:5432/bd_usuarios
     depends_on: [db_usuarios]
     networks: [backend_network]
 
