@@ -4,41 +4,45 @@ FROM node:20-alpine AS builder
 RUN npm install -g pnpm
 WORKDIR /app
 
-# 1. Copiar archivos de configuración del Monorepo
+# 1. Copiar archivos de configuración
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml nest-cli.json tsconfig.json tsconfig.build.json ./
 
-# 2. Copiar todo el código fuente (libs y apps)
-# Es necesario copiar todo para que el monorepo resuelva las dependencias cruzadas correctamente al compilar
+# 2. Copiar código fuente
 COPY libs ./libs
 COPY apps ./apps
 
 # 3. Instalar dependencias
 RUN pnpm install --frozen-lockfile
 
-# 4. Construir la librería compartida (Common)
-# Nota: Si tu build de ms-usuarios ya compila las dependencias, este paso podría ser opcional, 
-# pero es más seguro hacerlo explícito.
+# 4. Construir la librería Common
 WORKDIR /app/libs/common
 RUN pnpm run build
 
-# 5. VOLVER A LA RAÍZ y construir el microservicio usando la CLI global del proyecto
+# 5. Construir el microservicio desde la raíz
 WORKDIR /app
-# Esto usará el nest-cli.json de la raíz para generar el dist en /app/dist/apps/ms-usuarios
 RUN npx nest build ms-usuarios
 
 # --- RUNNER ---
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# 6. Copiar dependencias de producción
+# 6. Copiar dependencias (incluye los symlinks)
 COPY --from=builder /app/node_modules ./node_modules
 
-# 7. Copiar el build generado
-# Al construir desde la raíz, NestJS garantiza que esta ruta exista
-COPY --from=builder /app/dist/apps/ms-usuarios ./dist
+# 7. Copiar el build de la aplicación (ms-usuarios)
+# NOTA: Según tu log, Nest mantiene la estructura de carpetas, así que copiamos todo el bloque.
+COPY --from=builder /app/dist/apps/ms-usuarios ./dist/apps/ms-usuarios
 
-# 8. Comando de arranque
-# Basado en tu imagen del árbol de directorios (la estructura anidada rara):
-# dist -> apps -> ms-usuarios -> src -> main.js
-# Como copiamos "/app/dist/apps/ms-usuarios" dentro de "./dist", la ruta se mantiene relativa:
-CMD ["node", "dist/main.js"]
+# --- AQUÍ ESTÁ LA SOLUCIÓN AL ERROR ACTUAL ---
+# 8. Restaurar la librería compartida para que el symlink funcione
+# A. Copiamos la estructura base (package.json, etc.)
+COPY --from=builder /app/libs/common ./libs/common
+
+# B. Copiamos el compilado de la lib (dist) DENTRO de la carpeta de la lib
+#    Esto es necesario porque el package.json de la lib busca "dist/index.js" relativo a sí mismo.
+COPY --from=builder /app/dist/libs/common ./libs/common/dist
+# ---------------------------------------------
+
+# 9. Comando de arranque
+# Ajustado a la ruta que vimos en tu log de error (que prueba que esta ruta sí existe)
+CMD ["node", "dist/apps/ms-usuarios/src/main.js"]
