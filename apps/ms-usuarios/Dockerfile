@@ -41,4 +41,4 @@ COPY --from=builder /app/dist/apps/ms-usuarios ./dist
 # Basado en tu imagen del árbol de directorios (la estructura anidada rara):
 # dist -> apps -> ms-usuarios -> src -> main.js
 # Como copiamos "/app/dist/apps/ms-usuarios" dentro de "./dist", la ruta se mantiene relativa:
-CMD ["node", "dist/apps/ms-usuarios/src/main.js"]
+CMD ["node", "dist/main.js"]
