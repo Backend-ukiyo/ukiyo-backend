@@ -12,10 +12,10 @@
         "api-gateway": {
         "type": "application",
         "root": "apps/api-gateway",
-        "entryFile": "main",
-        "sourceRoot": "apps/api-gateway/src",
+        "entryFile": "src/main", 
+        "sourceRoot": "apps/api-gateway",
         "compilerOptions": {
-            "tsConfigPath": "apps/api-gateway/tsconfig.app.json"  
+            "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
         }
         },
         "ms-usuarios": {
