@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db_clientes:
+    image: postgres:15-alpine
+    container_name: db_clientes_local
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: user_clientes
+      POSTGRES_PASSWORD: password_clientes
+      POSTGRES_DB: bd_clientes
+    volumes:
+      - clientes_data_local:/var/lib/postgresql/data
+
+volumes:
+  clientes_data_local:
