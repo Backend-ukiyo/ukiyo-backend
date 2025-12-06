@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db_productos:
+    image: postgres:15-alpine
+    container_name: db_productos_local
+    restart: always
+    ports:
+      - "5436:5432"
+    environment:
+      POSTGRES_USER: user_productos
+      POSTGRES_PASSWORD: password_productos
+      POSTGRES_DB: bd_productos
+    volumes:
+      - productos_data_local:/var/lib/postgresql/data
+
+volumes:
+  productos_data_local:
