@@ -1,4 +1,5 @@
 import { IsString, IsBoolean, IsOptional, IsUUID, MinLength } from 'class-validator';
+import { Match } from '../decorators/match.decorators';
 
 export class CreateUsuarioDto {
 
@@ -6,6 +7,7 @@ export class CreateUsuarioDto {
     username: string;
 
     @IsString()
+    @Match('password', { message: 'Las contraseñas no coinciden' })
     password: string;
 
     @IsString()

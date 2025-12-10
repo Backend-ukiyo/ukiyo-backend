@@ -27,10 +27,11 @@ export class UsuariosController {
 
   // 4. Actualizar
   @MessagePattern({ cmd: 'update_usuario' })
-  update(@Payload() payload: { id: string; data: UpdateUsuarioDto }) {
-    return this.msUsuariosService.update(payload.id, payload.data);
+  update(@Payload() payload: any) {
+    const { id, ...data } = payload;
+    return this.msUsuariosService.update(id, data);
   }
-
+  
   // 5. Eliminar
   @MessagePattern({ cmd: 'delete_usuario' })
   remove(@Payload() id: string) {

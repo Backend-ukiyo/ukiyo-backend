@@ -1,15 +1,9 @@
+import 'dotenv/config';
+import * as dotenv from 'dotenv';
 import * as joi from 'joi';
+import { dot } from 'node:test/reporters';
 
-if (process.env.NODE_ENV !== 'production') {
-
-  const path = require('path');
-  
-  const dotenv = require('dotenv');
-
-  const envFilePath = path.resolve(process.cwd(), 'apps/ms-usuarios/.env');
-  
-  dotenv.config({ path: envFilePath });
-}
+dotenv.config({ path: 'apps/ms-usuarios/deploy/.env' });
 
 interface EnvVars {
   MS_PORT: number;

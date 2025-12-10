@@ -1,6 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
-import { CreateUsuarioDto, UpdateUsuarioDto } from '../../../../../libs/common/src';
+import { CreateUsuarioDto, UpdateUsuarioDto } from '@ukiyo/common';
 import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class UsuariosService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
-    this.logger.log('Conectado a la base de datos con Prisma');
+    this.logger.log('MS-Usuarios conectado a BD con Prisma');
   }
 
   async create(createDto: CreateUsuarioDto) {
@@ -49,17 +49,10 @@ export class UsuariosService implements OnModuleInit {
     return usuario;
   }
 
-  async update(id: string, updateDto: UpdateUsuarioDto) {
-    const { id: __, ...data } = updateDto;
-
-    if (data.password) {
-      (data as any).passwordHash = data.password;
-      delete data.password;
-    }
-
+  async update(id: string, updateDto: any) {
     return await this.prisma.usuario.update({
       where: { id },
-      data: data,
+      data: updateDto,
     });
   }
 
