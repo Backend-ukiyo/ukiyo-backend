@@ -28,7 +28,7 @@ services:
         dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
         args:
           - CONTEXT=${CONTEXT}
-          - MICROSERVICIO: ${MICROSERVICIO}
+          - MICROSERVICIO=${MICROSERVICIO}
       container_name: ukiyo-${MICROSERVICIO}
       # restart: unless-stopped (usar en produccion)
       ports:
