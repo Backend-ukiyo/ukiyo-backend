@@ -15,7 +15,7 @@ interface EnvVars {
 }
 
 const envsSchema = joi.object({
-  MS_PORT: joi.number().required(),
+  PORT: joi.number().required(),
   DATABASE_URL: joi.string().required(), // Validación obligatoria
   CLIENTES_HOST: joi.string().required(),
   CLIENTES_PORT: joi.number().required(),
