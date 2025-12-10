@@ -6,7 +6,7 @@ import { dot } from 'node:test/reporters';
 dotenv.config({ path: 'apps/ms-usuarios/deploy/.env' });
 
 interface EnvVars {
-  MS_PORT: number;
+  PORT: number;
   DATABASE_URL: string; // Variable para Prisma
   
   // Variables viejas 
@@ -31,7 +31,7 @@ if (error) {
 const envVars: EnvVars = value;
 
 export const envs = {
-  port: envVars.MS_PORT,
+  port: envVars.PORT,
   databaseUrl: envVars.DATABASE_URL, 
   
   clientes: {
