@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsuariosModule } from './modulos/usuarios/usuarios.module';
 import { ClientesModule } from './modulos/clientes/clientes.module';
 import { SeedModule } from './modulos/seed/seed.module';
+import { ProductosModule } from './modulos/productos/productos.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { SeedModule } from './modulos/seed/seed.module';
     }),
     UsuariosModule,
     ClientesModule,
+    ProductosModule,
     SeedModule,
   ],
   controllers: [],

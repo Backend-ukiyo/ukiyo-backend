@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ClientesService } from './clientes.service';
 import { ClientesController } from './clientes.controller';
-import { Cliente } from '@ukiyo/common';
+import { PrismaModule } from '../../../prisma/prisma.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Cliente]),
+    PrismaModule,
   ],
   controllers: [ClientesController],
   providers: [ClientesService],

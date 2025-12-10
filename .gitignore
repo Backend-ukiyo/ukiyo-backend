@@ -10,7 +10,7 @@ dist/
 build/
 
 # Entorno y Secretos
-.env
+# .env
 */.env
 **/.env
 .env.production

@@ -4,7 +4,6 @@
     "declaration": false,
     "outDir": "../../dist/apps/ms-productos"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "config/**/*"],
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
 }
-

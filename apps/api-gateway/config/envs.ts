@@ -16,12 +16,16 @@ interface EnvVars {
     USUARIOS_HOST: string; 
     CLIENTES_TCP_PORT: number;
     CLIENTES_HOST: string;
+    PRODUCTOS_HOST: string;
+    PRODUCTOS_PORT: number;
     }
 
     const envsSchema = joi.object({
     GATEWAY_PORT: joi.number().required(),
     USUARIOS_TCP_PORT: joi.number().required(),
-    USUARIOS_HOST: joi.string().required(), 
+    USUARIOS_HOST: joi.string().required(),
+    PRODUCTOS_HOST: joi.string().required(),
+    PRODUCTOS_PORT: joi.number().required(), 
     })
     .unknown(true);
 
@@ -40,5 +44,9 @@ interface EnvVars {
     clientes: {
         host: process.env.CLIENTES_HOST || 'ms_clientes',
         port: envVars.CLIENTES_TCP_PORT,
-    }
+    },
+    productos: {
+    host: process.env.PRODUCTOS_HOST || 'ms_productos',
+    port: envVars.PRODUCTOS_PORT,
+    },
 };

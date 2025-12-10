@@ -1,6 +1,8 @@
+import 'tsconfig-paths/register';
 import { NestFactory } from '@nestjs/core';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { AppModule } from './app.module';
+import { envs } from '../config';
 
 async function bootstrap() {
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
@@ -9,11 +11,12 @@ async function bootstrap() {
       transport: Transport.TCP,
       options: {
         host: '0.0.0.0',
-        port: 3003,
+        port: envs.port,
       },
     },
   );
+  
   await app.listen();
-  console.log('Microservicio de productos escuchando en el puerto 3003');
+  console.log(`Microservicio de productos escuchando en el puerto ${envs.port}`);
 }
 bootstrap();

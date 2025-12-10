@@ -1,44 +1,57 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Cliente } from '@ukiyo/common';
-import { CreateClienteDto, UpdateClienteDto } from '@ukiyo/common';
+import { Injectable, Logger, OnModuleInit, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../../prisma/prisma.service';
+import { CreateClienteDto, UpdateClienteDto } from '../../../../../libs/common/src';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
-export class ClientesService {
+export class ClientesService implements OnModuleInit {
     private readonly logger = new Logger(ClientesService.name);
 
     constructor(
-        @InjectRepository(Cliente)
-        private readonly clienteRepo: Repository<Cliente>,
+        private readonly prisma: PrismaService, // Inyectamos Prisma
     ) {}
+
+    async onModuleInit() {
+        this.logger.log('MS-Clientes conectado a BD con Prisma');
+    }
 
     async create(createDto: CreateClienteDto) {
         this.logger.log(`Creando cliente: ${createDto.email}`);
-        const cliente = this.clienteRepo.create(createDto);
-        return await this.clienteRepo.save(cliente);
+        try {
+        return await this.prisma.cliente.create({
+            data: createDto,
+        });
+        } catch (error) {
+        throw new RpcException(error);
+        }
     }
 
     async findAll() {
-        return await this.clienteRepo.find();
+        return await this.prisma.cliente.findMany();
     }
 
     async findOne(id: string) {
-        const cliente = await this.clienteRepo.findOneBy({ id });
+        const cliente = await this.prisma.cliente.findUnique({
+        where: { id },
+        });
         if (!cliente) {
-        throw new NotFoundException(`Cliente con ID ${id} no encontrado`);
+        throw new NotFoundException(`Cliente ${id} no encontrado`);
         }
         return cliente;
     }
 
     async update(id: string, updateDto: UpdateClienteDto) {
-        const cliente = await this.findOne(id);
-        this.clienteRepo.merge(cliente, updateDto);
-        return await this.clienteRepo.save(cliente);
+    const { id: __, ...data } = updateDto;
+
+    return await this.prisma.cliente.update({
+            where: { id },
+            data: data,
+        });
     }
 
     async remove(id: string) {
-        const cliente = await this.findOne(id);
-        return await this.clienteRepo.remove(cliente);
+        return await this.prisma.cliente.delete({
+        where: { id },
+        });
     }
 }

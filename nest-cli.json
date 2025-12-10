@@ -39,8 +39,8 @@
         "ms-productos": {
         "type": "application",
         "root": "apps/ms-productos",
-        "entryFile": "main",
-        "sourceRoot": "apps/ms-productos/src",
+        "entryFile": "src/main",
+        "sourceRoot": "apps/ms-productos",
         "compilerOptions": {
             "tsConfigPath": "apps/ms-productos/tsconfig.app.json"
         }

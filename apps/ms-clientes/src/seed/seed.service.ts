@@ -1,18 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Cliente } from '@ukiyo/common';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class SeedService {
-    constructor(
-        @InjectRepository(Cliente)
-        private readonly clienteRepository: Repository<Cliente>,
-    ) {}
+    constructor(private readonly prisma: PrismaService) {}
 
     async runSeed() {
         // limpia la tabla
-        await this.clienteRepository.clear();
+        await this.prisma.cliente.deleteMany();
 
         // datos de prueba
         const clientes = [
@@ -29,7 +24,8 @@ export class SeedService {
         },
         ];
 
-        await this.clienteRepository.save(clientes);
+        await this.prisma.cliente.createMany({ data: clientes });
+    
         return `SEED CLIENTES: ${clientes.length} insertados.`;
     }
 }
