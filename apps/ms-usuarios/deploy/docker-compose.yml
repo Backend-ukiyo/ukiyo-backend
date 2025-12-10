@@ -40,7 +40,8 @@ services:
       # depends_on:
       #   - postgres:
       #     condition: service_healthy
-      networks: ukiyo-network
+      networks: 
+        - ukiyo-network
       # healtcheck:
       #   test: ["CMD", "node", "-e", "require('net').connect(3001)"]
       #   interval: 10s
