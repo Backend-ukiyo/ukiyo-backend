@@ -33,18 +33,18 @@ RUN cd apps/${MICROSERVICIO} && npx prisma generate
 # Construir el microservicio
 RUN pnpm build ${MICROSERVICIO}
 
-# Runner stage
-FROM node:20-alpine AS runner
-WORKDIR /app
+# # Runner stage
+# FROM node:20-alpine AS runner
+# WORKDIR /app
 
-RUN npm install -g pnpm
+# RUN npm install -g pnpm
 
-# Copiar dependencias y build desde el builder
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package.json ./package.json
-# Necesitamos el schema en producción para las migraciones (opcional si usas start.sh)
-COPY --from=builder /app/apps/${MICROSERVICIO}/prisma ./apps/${MICROSERVICIO}/prisma
+# # Copiar dependencias y build desde el builder
+# COPY --from=builder /app/node_modules ./node_modules
+# COPY --from=builder /app/dist ./dist
+# COPY --from=builder /app/package.json ./package.json
+# # Necesitamos el schema en producción para las migraciones (opcional si usas start.sh)
+# COPY --from=builder /app/apps/${MICROSERVICIO}/prisma ./apps/${MICROSERVICIO}/prisma
 
 # Exponer el puerto
 EXPOSE 3001
