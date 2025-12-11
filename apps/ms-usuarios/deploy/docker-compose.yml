@@ -55,4 +55,4 @@ volumes:
 # se crea la red --> no lleva subnet 172.10.120.0/24
 networks:
   ukiyo-network:
-    driver: bridge
+    external: true
