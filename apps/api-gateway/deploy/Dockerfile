@@ -4,10 +4,13 @@ FROM node:20-alpine AS builder
 ARG CONTEXT
 ARG MICROSERVICIO
 ARG APP_MS=./apps/${MICROSERVICIO}
+
 WORKDIR /app
 
+# Instalar pnpm
 RUN npm install -g pnpm
 
+# Copiar configuración
 COPY ${APP_MS}/deploy/start.sh .
 COPY package.json .
 COPY pnpm-lock.yaml .
@@ -16,23 +19,17 @@ COPY .npmrc .
 COPY tsconfig.json .
 COPY nest-cli.json .
 
+# Instalar
 RUN pnpm install
 
+# Copiar código
 COPY libs ./libs
 COPY apps/${MICROSERVICIO} ./apps/${MICROSERVICIO}
 
+# Construir
 RUN pnpm build ${MICROSERVICIO}
-
-# # Runner stage
-# FROM node:20-alpine AS runner
-# WORKDIR /app
-# RUN npm install -g pnpm
-
-# COPY --from=builder /app/node_modules ./node_modules
-# COPY --from=builder /app/dist ./dist
-# COPY --from=builder /app/package.json ./
 
 EXPOSE 3000
 
-# CMD ["node", "dist/apps/api-gateway/src/main.js"]
-CMD ["tail", "-f", "/dev/null"]
+# Arrancamos el Gateway automáticamente
+CMD ["node", "dist/apps/api-gateway/main.js"]
