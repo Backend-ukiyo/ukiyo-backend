@@ -7,7 +7,7 @@ services:
       dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
       args:
         - MICROSERVICIO=${MICROSERVICIO}
-        - CONTEXTO=${CONTEXTO}
+        - CONTEXT=${CONTEXTO}
     container_name: ukiyo-api-gateway
     ports:
       - "${PORT}:3000"
