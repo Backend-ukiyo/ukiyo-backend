@@ -1,35 +1,21 @@
-# Build stage
 FROM node:20-alpine AS builder
 
 ARG CONTEXT
 ARG MICROSERVICIO
-ARG APP_MS=./apps/${MICROSERVICIO}
-
 WORKDIR /app
 
-# Instalar pnpm
+# Instalar pnpm globalmente
 RUN npm install -g pnpm
 
-# Copiar configuración
-COPY ${APP_MS}/deploy/start.sh .
-COPY package.json .
-COPY pnpm-lock.yaml .
-COPY pnpm-workspace.yaml .
-COPY .npmrc .
-COPY tsconfig.json .
-COPY nest-cli.json .
+# Copiar archivos de configuración
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+COPY tsconfig.json nest-cli.json ./
 
-# Instalar
-RUN pnpm install
-
-# Copiar código
+# Copiar código fuente
 COPY libs ./libs
 COPY apps/${MICROSERVICIO} ./apps/${MICROSERVICIO}
 
-# Construir
-RUN pnpm build ${MICROSERVICIO}
-
+# Exponer puerto
 EXPOSE 3000
 
-# Arrancamos el Gateway automáticamente
-CMD ["node", "dist/apps/api-gateway/main.js"]
+CMD ["tail", "-f", "/dev/null"]
