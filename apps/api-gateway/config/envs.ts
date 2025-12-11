@@ -6,7 +6,7 @@ import { dot } from 'node:test/reporters';
 dotenv.config({ path: 'apps/api-gateway/deploy/.env' });
 
 interface EnvVars {
-    GATEWAY_PORT: number;
+    PORT: number;
     USUARIOS_TCP_PORT: number;
     USUARIOS_HOST: string; 
     CLIENTES_TCP_PORT: number;
@@ -16,7 +16,7 @@ interface EnvVars {
     }
 
     const envsSchema = joi.object({
-    GATEWAY_PORT: joi.number().required(),
+    PORT: joi.number().required(),
     USUARIOS_TCP_PORT: joi.number().required(),
     USUARIOS_HOST: joi.string().required(),
     PRODUCTOS_HOST: joi.string().required(),
@@ -31,7 +31,7 @@ interface EnvVars {
     const envVars: EnvVars = value;
 
     export const envs = {
-    port: envVars.GATEWAY_PORT,
+    port: envVars.PORT,
     usuarios: {
         host: process.env.USUARIOS_HOST || 'ms_usuarios', // Fallback al nombre docker
         port: envVars.USUARIOS_TCP_PORT,
