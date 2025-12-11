@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: ${CONTEXTO}
+      dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
+      args:
+        - MICROSERVICIO=${MICROSERVICIO}
+        - CONTEXTO=${CONTEXTO}
+    container_name: ukiyo-api-gateway
+    ports:
+      - "${PORT}:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT}
+      # Apuntar al NOMBRE del contenedor del otro servicio
+      - USUARIOS_MICROSERVICE_HOST=ukiyo-${MS_USUARIOS_HOST}
+      - USUARIOS_MICROSERVICE_PORT=${MS_USUARIOS_PORT}
+    networks:
+      - ukiyo-network
+
+networks:
+  ukiyo-network:
+    external: true

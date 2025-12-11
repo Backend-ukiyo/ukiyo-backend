@@ -1,19 +1,19 @@
 version: '3.8'
 
 services:
-  postgres:
+  postgresUsuarios:
     image: postgres:15-alpine
     container_name: ukiyoBD-ms-usuarios
     env_file:
       - .env
     environment:
-      CONTEXT: ${CONTEXT}
+      CONTEXT: /home/fabri/devops/DespAW/Docker
       # variables de entorno para ejecutar el contenedor de postgres
-      POSTGRES_HOST: ${DB_HOST}
-      POSTGRES_PORT: ${DB_PORT}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -24,10 +24,10 @@ services:
   ms-usuarios:
       profiles: ["usuarios"]
       build:
-        context: /home/fabri/devops/DespAW/Docker/Ukiyo/proyectos/UkiyoApp
+        context: ${CONTEXTO}
         dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
         args:
-          - CONTEXT=${CONTEXT}
+          - CONTEXT=${CONTEXTO}
           - MICROSERVICIO=${MICROSERVICIO}
       container_name: ukiyo-${MICROSERVICIO}
       # restart: unless-stopped (usar en produccion)
