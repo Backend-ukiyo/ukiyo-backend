@@ -1,33 +1,65 @@
-import 'dotenv/config';
-import * as dotenv from 'dotenv';
 import * as joi from 'joi';
-import { dot } from 'node:test/reporters';
 
-dotenv.config({ path: 'apps/api-gateway/deploy/.env' });
+if (process.env.NODE_ENV !== 'production') {
+    const path = require('path');
+    const dotenv = require('dotenv');
+    const envFilePath = path.resolve(process.cwd(), 'apps/api-gateway/.env');
+    dotenv.config({ path: envFilePath });
+}
 
 interface EnvVars {
-    PORT: number;
-    MS_USUARIOS_PORT: number;
-    MS_USUARIOS_HOST: string; 
-    }
-
-    const envsSchema = joi.object({
-    PORT: joi.number().required(),
-    MS_USUARIOS_PORT: joi.number().required(),
-    MS_USUARIOS_HOST: joi.string().required(),
-    })
-    .unknown(true);
-
-    const { error, value } = envsSchema.validate(process.env);
-
-    if (error) throw new Error(`Config validation error: ${error.message}`);
+    GATEWAY_PORT: number;
     
-    const envVars: EnvVars = value;
+    // Usuarios
+    USUARIOS_TCP_PORT: number;
+    USUARIOS_HOST: string;
+    
+    // Clientes
+    CLIENTES_TCP_PORT: number;
+    CLIENTES_HOST: string;
 
-    export const envs = {
-    port: envVars.PORT,
+    // Productos
+    PRODUCTOS_TCP_PORT: number;
+    PRODUCTOS_HOST: string;
+}
+
+const envsSchema = joi.object({
+    GATEWAY_PORT: joi.number().required(),
+    
+    // Validaciones Usuarios
+    USUARIOS_TCP_PORT: joi.number().required(),
+    USUARIOS_HOST: joi.string().required(),
+
+    // Validaciones Clientes
+    CLIENTES_TCP_PORT: joi.number().required(),
+    CLIENTES_HOST: joi.string().required(),
+
+    // Validaciones Productos
+    PRODUCTOS_TCP_PORT: joi.number().required(),
+    PRODUCTOS_HOST: joi.string().required(),
+})
+.unknown(true);
+
+const { error, value } = envsSchema.validate(process.env);
+
+if (error) {
+    throw new Error(`Config validation error: ${error.message}`);
+}
+
+const envVars: EnvVars = value;
+
+export const envs = {
+    port: envVars.GATEWAY_PORT,
     usuarios: {
-        host: process.env.MS_USUARIOS_HOST || 'ms-usuarios', // Fallback al nombre docker
-        port: envVars.MS_USUARIOS_PORT,
-    }
+        host: envVars.USUARIOS_HOST,
+        port: envVars.USUARIOS_TCP_PORT,
+    },
+    clientes: {
+        host: envVars.CLIENTES_HOST,
+        port: envVars.CLIENTES_TCP_PORT,
+    },
+    productos: {
+        host: envVars.PRODUCTOS_HOST,
+        port: envVars.PRODUCTOS_TCP_PORT,
+    },
 };
