@@ -2,6 +2,7 @@ FROM node:20-alpine
 
 ARG CONTEXT
 ARG MICROSERVICIO
+ARG APP_MS=./apps/${MICROSERVICIO}
 WORKDIR /app
 
 # Copiar archivos de configuración
