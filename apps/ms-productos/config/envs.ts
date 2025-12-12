@@ -17,7 +17,7 @@ import { dot } from 'node:test/reporters';
 dotenv.config({ path: 'apps/ms-productos/deploy/.env' });
 
 interface EnvVars {
-    MS_PORT: number;
+    PORT: number;
     DB_HOST: string;
     DB_PORT: number;
     DB_USERNAME: string;
@@ -26,7 +26,7 @@ interface EnvVars {
 }
 
 const envsSchema = joi.object({
-    MS_PORT: joi.number().required(),
+    PORT: joi.number().required(),
     DB_HOST: joi.string().required(),
     DB_PORT: joi.number().required(),
     DB_USERNAME: joi.string().required(),
@@ -41,7 +41,7 @@ if (error) throw new Error(`Config validation error: ${error.message}`);
 const envVars: EnvVars = value;
 
 export const envs = {
-    port: envVars.MS_PORT,
+    port: envVars.PORT,
     db: {
         host: envVars.DB_HOST,
         port: envVars.DB_PORT,
