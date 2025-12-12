@@ -27,6 +27,7 @@
     "@nestjs/microservices": "^11.1.9",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
+    "@prisma/adapter-pg": "^7.0.1",
     "@prisma/client": "^7.0.1",
     "@ukiyo/common": "workspace:*",
     "class-transformer": "^0.5.1",
