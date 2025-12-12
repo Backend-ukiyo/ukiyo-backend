@@ -21,4 +21,4 @@ COPY apps/${MICROSERVICIO} ./apps/${MICROSERVICIO}
 # Exponer puerto
 EXPOSE 3001
 
-CMD ["tail", "-f", "/dev/null"]
+CMD ["sh", "start.sh"]

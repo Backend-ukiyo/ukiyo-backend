@@ -31,8 +31,8 @@ services:
           - MICROSERVICIO=${MICROSERVICIO}
       container_name: ukiyo-${MICROSERVICIO}
       # restart: unless-stopped (usar en produccion)
-      ports:
-        - "${PORT}:3001"
+      # ports:
+      #  - "${PORT}:3001"
       env_file:
         - .env
       environment:
