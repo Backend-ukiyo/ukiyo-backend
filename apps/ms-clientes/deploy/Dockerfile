@@ -1,38 +1,28 @@
-# --- BUILDER ---
-FROM node:20-alpine AS builder
+FROM node:20-alpine
 
-RUN npm install -g pnpm
+ARG CONTEXTO
+ARG MICROSERVICIO
+ARG APP_MS=./apps/${MICROSERVICIO}
+
 WORKDIR /app
 
-# 1. Copiar configuración del Monorepo
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN apk add --no-cache openssl bash
 
-# 2. Copiar la librería compartida
-COPY libs/common ./libs/common
+COPY ${APP_MS}/deploy/start.sh .
 
-# 3. Copiar EL CÓDIGO DE ESTE SERVICIO
-COPY apps/ms-clientes ./apps/ms-clientes
+COPY package.json .
+COPY pnpm-lock.yaml .
+COPY pnpm-workspace.yaml .
+COPY .npmrc .
+COPY tsconfig.json .
+COPY nest-cli.json .
 
-# 4. Instalar dependencias
-RUN pnpm install --frozen-lockfile
+COPY libs ./libs
+COPY apps/${MICROSERVICIO} ./apps/${MICROSERVICIO}
 
-# 5. Construir Common
-WORKDIR /app/libs/common
-RUN pnpm run build
+RUN sed -i 's/\r$//' ./start.sh && chmod +x ./start.sh
 
-# 6. Construir el Microservicio
-WORKDIR /app/apps/ms-clientes
-RUN ../../node_modules/.bin/nest build
+EXPOSE 3000
+USER root
 
-# --- RUNNER ---
-FROM node:20-alpine AS runner
-WORKDIR /app
-
-# 1. Copiar node_modules
-COPY --from=builder /app/node_modules ./node_modules
-
-# 2. Copiar TODO el dist generado (más seguro para depurar)
-COPY --from=builder /app/dist ./dist
-
-# 3. Ajustar el comando de arranque
-CMD ["node", "dist/apps/ms-clientes/main.js"]
+CMD ["./start.sh"]
