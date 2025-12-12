@@ -8,6 +8,7 @@ config_git(){
 #....
 
 main(){
+    npm install -g npm@11.7.0
     npm install -g pnpm
     npm install -g pm2
 
