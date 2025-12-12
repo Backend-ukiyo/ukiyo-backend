@@ -26,9 +26,6 @@ main(){
     
     pm2 start pnpm --name "ms-usuarios" -- start:dev:usuarios
 
-    echo "   - Ver logs:    pm2 logs ms-usuarios"
-    echo "   - Ver estado:  pm2 status"
-    echo "   - Reiniciar:   pm2 restart ms-usuarios"
 }
-# tail -f /dev/null
 main
+tail -f /dev/null

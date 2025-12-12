@@ -1,21 +1,23 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine
 
 ARG CONTEXT
 ARG MICROSERVICIO
 WORKDIR /app
 
-# Instalar pnpm globalmente
-RUN npm install -g pnpm
-
 # Copiar archivos de configuración
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
-COPY tsconfig.json nest-cli.json ./
+COPY ${APP_MS}/deploy/start.sh .
+COPY ./package.json .
+COPY ./pnpm-workspace.yaml .
+COPY ./pnpm-lock.yaml .
+COPY ./.npmrc .
+COPY ./tsconfig.json .
+COPY ./nest-cli.json .
 
 # Copiar código fuente
-COPY libs ./libs
-COPY apps/${MICROSERVICIO} ./apps/${MICROSERVICIO}
+COPY ./libs ./libs
+COPY ./apps/${MICROSERVICIO} ./apps/${MICROSERVICIO}
 
 # Exponer puerto
 EXPOSE 3000
 
-CMD ["sh", "start.sh"]
+CMD ["./start.sh"]

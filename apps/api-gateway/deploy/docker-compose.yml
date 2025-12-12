@@ -1,20 +1,19 @@
-version: '3.8'
-
 services:
   api-gateway:
     build:
-      context: ${CONTEXT}
+      context: ../../../
       dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
       args:
         - MICROSERVICIO=${MICROSERVICIO}
     container_name: ukiyo-${MICROSERVICIO}
+    restart: unless-stopped
     ports:
-      - "${GATEWAY_PORT}:3000"
+      - "3000:3000"
     env_file:
       - .env
     environment:
       - NODE_ENV=production
-      - GATEWAY_PORT=${GATEWAY_PORT}
+      # Variables para conectar con los ms
       - USUARIOS_HOST=${USUARIOS_HOST}
       - USUARIOS_TCP_PORT=${USUARIOS_TCP_PORT}
       - CLIENTES_HOST=${CLIENTES_HOST}
