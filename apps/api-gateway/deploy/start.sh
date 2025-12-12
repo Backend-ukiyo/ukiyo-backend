@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-config.git(){
+config_git(){
     git clone https://github.com/Backend-ukiyo/ukiyo-backend.git
 }
 
