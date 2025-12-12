@@ -1,18 +1,44 @@
-version: '3.8'
+version: '3'
 
 services:
-  db_productos:
+  postgresProductos:
     image: postgres:15-alpine
-    container_name: db_productos_local
+    container_name: ukiyoBD-ms-productos
     restart: always
-    ports:
-      - "5436:5432"
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: user_productos
-      POSTGRES_PASSWORD: password_productos
-      POSTGRES_DB: bd_productos
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
     volumes:
-      - productos_data_local:/var/lib/postgresql/data
+      - productos_data:/var/lib/postgresql/data
+    ports:
+      - "${DB_PORT}:5432"
+    networks:
+      - ukiyo-network
+
+  ms-productos:
+    build:
+      context: ../../../
+      dockerfile: ./apps/${MICROSERVICIO}/deploy/Dockerfile
+      args:
+        - MICROSERVICIO=${MICROSERVICIO}
+        - CONTEXTO=${CONTEXTO}
+    container_name: ukiyo-${MICROSERVICIO}
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+    networks:
+      - ukiyo-network
+    # depends_on:
+    #   - postgresProductos
 
 volumes:
-  productos_data_local:
+  productos_data:
+
+networks:
+  ukiyo-network:
+    external: true
