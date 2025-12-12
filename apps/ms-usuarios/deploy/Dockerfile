@@ -6,7 +6,7 @@ ARG APP_MS=./apps/${MICROSERVICIO}
 
 WORKDIR /app
 
-RUN apk add --no-cache openssl
+RUN apk add --no-cache openssl bash
 
 COPY ${APP_MS}/deploy/start.sh .
 # Copiar archivos de configuración
@@ -22,10 +22,11 @@ COPY libs ./libs
 COPY apps/${MICROSERVICIO} ./apps/${MICROSERVICIO}
 
 # RUN chmod +x ./start.sh
+RUN sed -i 's/\r$//' ./start.sh && chmod +x ./start.sh
 
 # Exponer puerto
 EXPOSE 3000
 USER root
 
-# CMD ["./start.sh"]
-CMD ["tail", "-f", "/dev/null"]
+CMD ["./start.sh"]
+# CMD ["tail", "-f", "/dev/null"]
