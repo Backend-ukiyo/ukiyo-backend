@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { UsuariosModule } from './modulos/usuarios/usuarios.module';
-import { PrismaModule } from '../prisma/prisma.module';
 import { PerfilesModule } from './modulos/perfiles/perfiles.module';
 import { EmpleadosModule } from './modulos/empleados/empleados.module';
 

@@ -1,23 +1,26 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma-client/ms-usuarios';
+import { Injectable, Logger } from '@nestjs/common';
+import { PrismaService } from '../../../prisma/prisma.service'; // <--- Usamos el servicio central
 import { CreateEmpleadoDto } from '@ukiyo/common';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
-export class EmpleadosService extends PrismaClient implements OnModuleInit {
+export class EmpleadosService {
     private readonly logger = new Logger('EmpleadosService');
 
-    async onModuleInit() {
-        await this.$connect();
-    }
-
+    constructor(private readonly prisma: PrismaService) {}
+    
     async create(createEmpleadoDto: CreateEmpleadoDto) {
-        return this.empleado.create({
-        data: createEmpleadoDto as any, 
+        try {
+        return await this.prisma.empleado.create({
+            data: createEmpleadoDto as any,
         });
+        } catch (error) {
+        throw new RpcException(error);
+        }
     }
 
     async findByUserId(userId: string) {
-        return this.empleado.findUnique({
+        return await this.prisma.empleado.findUnique({
         where: { userId },
         });
     }
