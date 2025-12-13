@@ -8,15 +8,40 @@ datasource db {
 }
 
 model Usuario {
-  id           String   @id @default(uuid())
-  username     String   @unique
-  passwordHash String   @map("password_hash")
-  rol          String   @default("cliente")
-  esEmpleado   Boolean  @default(false) @map("es_empleado")
-  clienteId    String?  @map("cliente_id")
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  roles     String[] @default(["USER"]) // Ojo: Array de strings para roles simples
+  isActive  Boolean  @default(true)
+  
+  // Relaciones
+  perfil    Perfil?
+  empleado  Empleado?
 
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-  @@map("usuarios")
+model Perfil {
+  id        Int     @id @default(autoincrement())
+  nombre    String
+  apellido  String
+  telefono  String?
+  direccion String?
+  
+  // Clave foránea a Usuario (1 a 1)
+  userId    Int     @unique
+  user      Usuario    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Empleado {
+  id               Int      @id @default(autoincrement())
+  puesto           String
+  salario          Float
+  fechaContratacion DateTime @default(now())
+  departamento     String?
+
+  // Clave foránea a Usuario (1 a 1)
+  userId           Int      @unique
+  user             Usuario    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
