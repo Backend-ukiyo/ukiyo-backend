@@ -4,7 +4,7 @@ import { catchError } from 'rxjs';
 import { USUARIOS_SERVICE } from '../../../config';
 import { CreatePerfilDto } from '@ukiyo/common';
 
-@Controller('perfiles')
+@Controller('api/perfiles')
     export class PerfilesController {
     constructor(
         @Inject(USUARIOS_SERVICE) private readonly client: ClientProxy,
