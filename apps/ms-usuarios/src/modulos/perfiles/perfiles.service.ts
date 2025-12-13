@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma-client/ms-usuarios';
 import { CreatePerfilDto } from '@ukiyo/common';
 
 @Injectable()
@@ -12,13 +12,15 @@ export class PerfilesService extends PrismaClient implements OnModuleInit {
 
     async create(createPerfilDto: CreatePerfilDto) {
         return this.perfil.create({
-        data: createPerfilDto,
+        data: createPerfilDto as any, 
         });
     }
 
     async findByUserId(userId: number) {
         return this.perfil.findUnique({
-        where: { userId },
+        where: { 
+            userId: userId
+        },
         });
     }
 }

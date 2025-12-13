@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma-client/ms-usuarios';
 import { CreateEmpleadoDto } from '@ukiyo/common';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class EmpleadosService extends PrismaClient implements OnModuleInit {
 
     async create(createEmpleadoDto: CreateEmpleadoDto) {
         return this.empleado.create({
-        data: createEmpleadoDto,
+        data: createEmpleadoDto as any, 
         });
     }
 
