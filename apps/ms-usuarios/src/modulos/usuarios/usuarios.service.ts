@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service'; // Mantenemos tu servicio
+import { PrismaService } from '../../../prisma/prisma.service';
 import { CreateUsuarioDto, UpdateUsuarioDto } from '@ukiyo/common';
 import { RpcException } from '@nestjs/microservices';
 import * as bcrypt from 'bcrypt';

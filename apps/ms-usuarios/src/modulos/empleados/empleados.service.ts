@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service'; // <--- Usamos el servicio central
+import { PrismaService } from '../../../prisma/prisma.service';
 import { CreateEmpleadoDto } from '@ukiyo/common';
 import { RpcException } from '@nestjs/microservices';
 
@@ -8,7 +8,7 @@ export class EmpleadosService {
     private readonly logger = new Logger('EmpleadosService');
 
     constructor(private readonly prisma: PrismaService) {}
-    
+
     async create(createEmpleadoDto: CreateEmpleadoDto) {
         try {
         return await this.prisma.empleado.create({

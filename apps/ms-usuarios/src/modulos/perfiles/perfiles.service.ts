@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service'; // <--- Usamos el servicio central
+import { PrismaService } from '../../../prisma/prisma.service';
 import { CreatePerfilDto } from '@ukiyo/common';
 import { RpcException } from '@nestjs/microservices';
 
