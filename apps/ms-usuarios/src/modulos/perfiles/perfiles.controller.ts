@@ -13,7 +13,7 @@ export class PerfilesController {
   }
 
   @MessagePattern({ cmd: 'find_perfil_by_user' })
-  findByUser(@Payload('userId') userId: string) {
+  findByUser(@Payload() userId: string) {
     return this.perfilesService.findByUserId(userId);
   }
 }
