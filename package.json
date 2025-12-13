@@ -17,7 +17,6 @@
         "build:pedido-cat": "nest build ms-pedido-cat",
         "build:evento": "nest build ms-evento",
         "build:all": "nest build && nest build api-gateway && nest build ms-usuarios && nest build ms-clientes && nest build ms-productos && nest build ms-proveedores && nest build ms-pedidos-del && nest build ms-inventario && nest build ms-pedido-cat && nest build ms-evento",
-
         "start": "nest start",
         "start:gateway": "nest start api-gateway",
         "start:usuarios": "nest start ms-usuarios",
@@ -28,7 +27,6 @@
         "start:inventario": "nest start ms-inventario",
         "start:pedido-cat": "nest start ms-pedido-cat",
         "start:evento": "nest start ms-evento",
-
         "start:dev": "nest start --watch",
         "start:dev:gateway": "nest start --watch api-gateway",
         "start:dev:usuarios": "nest start --watch ms-usuarios",
@@ -39,7 +37,6 @@
         "start:dev:inventario": "nest start --watch ms-inventario",
         "start:dev:pedido-cat": "nest start --watch ms-pedido-cat",
         "start:dev:evento": "nest start --watch ms-evento",
-
         "start:debug": "nest start --debug --watch",
         "start:debug:gateway": "nest start --debug --watch api-gateway",
         "start:debug:usuarios": "nest start --debug --watch ms-usuarios",
@@ -50,9 +47,7 @@
         "start:debug:inventario": "nest start --debug --watch ms-inventario",
         "start:debug:pedido-cat": "nest start --debug --watch ms-pedido-cat",
         "start:debug:evento": "nest start --debug --watch ms-evento",
-        
         "start:prod": "node dist/main",
-        
         "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
         "docker:up": "docker-compose up -d --build",
         "docker:down": "docker-compose down --volumes --remove-orphans",
@@ -81,12 +76,14 @@
         "@nestjs/cli": "^11.0.14",
         "@nestjs/schematics": "^10.0.0",
         "@nestjs/testing": "^10.0.0",
+        "@types/bcrypt": "^6.0.0",
         "@types/express": "^4.17.17",
         "@types/jest": "^29.5.2",
         "@types/node": "^20.3.1",
         "@types/supertest": "^2.0.12",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
+        "bcrypt": "^6.0.0",
         "eslint": "^8.42.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-prettier": "^5.0.0",

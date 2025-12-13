@@ -8,7 +8,8 @@ datasource db {
 }
 
 model Usuario {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
+  username  String   @unique
   email     String   @unique
   password  String
   roles     String[] @default(["USER"]) // Ojo: Array de strings para roles simples
@@ -30,8 +31,8 @@ model Perfil {
   direccion String?
   
   // Clave foránea a Usuario (1 a 1)
-  userId    Int     @unique
-  user      Usuario    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String  @unique 
+  user      Usuario @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Empleado {
@@ -42,6 +43,6 @@ model Empleado {
   departamento     String?
 
   // Clave foránea a Usuario (1 a 1)
-  userId           Int      @unique
+  userId           String    @unique
   user             Usuario    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

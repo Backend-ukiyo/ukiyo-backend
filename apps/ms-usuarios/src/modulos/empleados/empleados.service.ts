@@ -16,7 +16,7 @@ export class EmpleadosService extends PrismaClient implements OnModuleInit {
         });
     }
 
-    async findByUserId(userId: number) {
+    async findByUserId(userId: string) {
         return this.empleado.findUnique({
         where: { userId },
         });

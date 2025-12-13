@@ -16,7 +16,7 @@ export class PerfilesService extends PrismaClient implements OnModuleInit {
         });
     }
 
-    async findByUserId(userId: number) {
+    async findByUserId(userId: string) {
         return this.perfil.findUnique({
         where: { 
             userId: userId

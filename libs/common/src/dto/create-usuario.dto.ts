@@ -1,25 +1,18 @@
-import { IsString, IsBoolean, IsOptional, IsUUID, MinLength } from 'class-validator';
-import { Match } from '../decorators/match.decorators';
+import { IsString, IsEmail, IsOptional, IsArray, MinLength } from 'class-validator';
 
 export class CreateUsuarioDto {
-
     @IsString()
     username: string;
 
+    @IsEmail({}, { message: 'El formato del correo no es válido' })
+    email: string;
+
     @IsString()
-    @Match('password', { message: 'Las contraseñas no coinciden' })
+    @MinLength(6, { message: 'La contraseña debe tener al menos 6 caracteres' })
     password: string;
 
-    @IsString()
     @IsOptional()
-    rol?: string;
-
-    @IsBoolean()
-    @IsOptional()
-    esEmpleado?: boolean;
-
-    @IsUUID()
-    @IsOptional()
-    clienteId?: string;
-    
+    @IsArray()
+    @IsString({ each: true })
+    roles?: string[];
 }

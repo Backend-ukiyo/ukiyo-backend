@@ -1,7 +1,8 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { PrismaService } from '../../../prisma/prisma.service'; // Mantenemos tu servicio
 import { CreateUsuarioDto, UpdateUsuarioDto } from '@ukiyo/common';
 import { RpcException } from '@nestjs/microservices';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsuariosService implements OnModuleInit {
@@ -19,13 +20,16 @@ export class UsuariosService implements OnModuleInit {
     this.logger.log(`Creando usuario: ${createDto.username}`);
 
     try {
+      const { password, ...userData } = createDto;
+      
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       return await this.prisma.usuario.create({
         data: {
-          username: createDto.username,
-          passwordHash: createDto.password, 
-          rol: createDto.rol || 'cliente',
-          esEmpleado: createDto.esEmpleado || false,
-          clienteId: createDto.clienteId,
+          ...userData,
+          password: hashedPassword,
+          roles: ['USER'],
+          isActive: true,
         },
       });
     } catch (error) {
@@ -34,7 +38,9 @@ export class UsuariosService implements OnModuleInit {
   }
 
   async findAll() {
-    return await this.prisma.usuario.findMany();
+    return await this.prisma.usuario.findMany({
+      where: { isActive: true },
+    });
   }
 
   async findOne(id: string) {
@@ -49,16 +55,28 @@ export class UsuariosService implements OnModuleInit {
     return usuario;
   }
 
-  async update(id: string, updateDto: any) {
-    return await this.prisma.usuario.update({
-      where: { id },
-      data: updateDto,
-    });
+  async update(id: string, updateDto: UpdateUsuarioDto) {
+    const { id: _, ...data } = updateDto;
+
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+
+    try {
+      return await this.prisma.usuario.update({
+        where: { id },
+        data: data as any,
+      });
+    } catch (error) {
+      throw new RpcException(error);
+    }
   }
 
   async remove(id: string) {
-    return await this.prisma.usuario.delete({
+    return await this.prisma.usuario.update({
       where: { id },
+      data: { isActive: false },
     });
+  
   }
 }

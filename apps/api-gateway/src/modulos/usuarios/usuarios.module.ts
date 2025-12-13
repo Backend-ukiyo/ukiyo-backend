@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { UsuariosController } from './usuarios.controller';
+import { PerfilesController } from './perfiles.controller';
+import { EmpleadosController } from './empleados.controller';
 import { UsuariosService } from './usuarios.service';
 import { envs, USUARIOS_SERVICE, CLIENTES_SERVICE } from '../../../config';
 
@@ -25,7 +27,7 @@ import { envs, USUARIOS_SERVICE, CLIENTES_SERVICE } from '../../../config';
       },
     ]),
   ],
-  controllers: [UsuariosController],
+  controllers: [UsuariosController, PerfilesController, EmpleadosController],
   providers: [UsuariosService],
 })
 export class UsuariosModule {}
