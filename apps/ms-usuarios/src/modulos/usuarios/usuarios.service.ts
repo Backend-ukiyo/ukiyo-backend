@@ -26,9 +26,10 @@ export class UsuariosService implements OnModuleInit {
 
       return await this.prisma.usuario.create({
         data: {
-          ...userData,
+          username: createDto.username,
+          email:    createDto.email,
           password: hashedPassword,
-          roles: ['USER'],
+          roles:    ['USER'],
           isActive: true,
         },
       });
