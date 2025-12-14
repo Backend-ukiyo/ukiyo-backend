@@ -18,6 +18,7 @@ model Usuario {
   // Relaciones
   perfil    Perfil?
   empleado  Empleado?
+  accesos   Acceso[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -47,4 +48,17 @@ model Empleado {
   // Clave foránea a Usuario (1 a 1)
   userId           String    @unique
   user             Usuario    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Acceso {
+  id          Int      @id @default(autoincrement())
+  fechaHora   DateTime @default(now())
+  ipOrigen    String
+  resultado   String
+  
+  // Relación N:1 con Usuario (Muchos accesos pertenecen a un usuario)
+  userId      String
+  user        Usuario  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("Accesos")
 }

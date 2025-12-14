@@ -1,5 +1,6 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../../../prisma/prisma.service';
+import { AccesosService } from '../accesos/accesos.service';
 import { CreateUsuarioDto, UpdateUsuarioDto } from '@ukiyo/common';
 import { RpcException } from '@nestjs/microservices';
 import * as bcrypt from 'bcrypt';
@@ -10,6 +11,7 @@ export class UsuariosService implements OnModuleInit {
 
   constructor(
     private readonly prisma: PrismaService,
+    private readonly accesosService: AccesosService,
   ) {}
 
   async onModuleInit() {
@@ -56,6 +58,18 @@ export class UsuariosService implements OnModuleInit {
     return usuario;
   }
 
+  async findByUsernameOrEmail(term: string) {
+    return await this.prisma.usuario.findFirst({
+      where: {
+        OR: [
+          { email: term },
+          { username: term },
+        ],
+        isActive: true,
+      },
+    });
+  }
+
   async update(id: string, updateDto: UpdateUsuarioDto) {
     const { id: _, ...data } = updateDto;
 
@@ -78,6 +92,5 @@ export class UsuariosService implements OnModuleInit {
       where: { id },
       data: { isActive: false },
     });
-  
   }
 }

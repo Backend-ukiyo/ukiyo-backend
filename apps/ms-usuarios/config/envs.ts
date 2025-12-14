@@ -12,6 +12,7 @@ interface EnvVars {
   // Variables viejas 
   CLIENTES_HOST: string;
   CLIENTES_PORT: number;
+  JWT_SECRET: string;
 }
 
 const envsSchema = joi.object({
@@ -19,6 +20,7 @@ const envsSchema = joi.object({
   DATABASE_URL: joi.string().required(), // Validación obligatoria
   CLIENTES_HOST: joi.string().required(),
   CLIENTES_PORT: joi.number().required(),
+  JWT_SECRET: joi.string().required(),
 })
 .unknown(true);
 
@@ -32,7 +34,8 @@ const envVars: EnvVars = value;
 
 export const envs = {
   port: envVars.PORT,
-  databaseUrl: envVars.DATABASE_URL, 
+  databaseUrl: envVars.DATABASE_URL,
+  jwtSecret: envVars.JWT_SECRET, 
   
   clientes: {
     host: envVars.CLIENTES_HOST,
