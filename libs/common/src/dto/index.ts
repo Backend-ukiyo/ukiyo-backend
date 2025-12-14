@@ -2,6 +2,7 @@ export * from './create-usuario.dto';
 export * from './create-perfil.dto';
 export * from './create-empleado.dto';
 export * from './create-acceso.dto';
+export * from './login-usuario.dto';
 export * from './create-cliente.dto';
 export * from './update-usuario.dto';
 export * from './update-empleado.dto'
