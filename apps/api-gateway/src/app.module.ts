@@ -4,7 +4,7 @@ import { UsuariosModule } from './modulos/usuarios/usuarios.module';
 import { ClientesModule } from './modulos/clientes/clientes.module';
 import { SeedModule } from './modulos/seed/seed.module';
 import { ProductosModule } from './modulos/productos/productos.module';
-import { AuthController } from './modulos/auth/auth.controller';
+import { AuthModule } from './modulos/auth/auth.module';
 
 @Module({
   imports: [
@@ -15,8 +15,9 @@ import { AuthController } from './modulos/auth/auth.controller';
     ClientesModule,
     ProductosModule,
     SeedModule,
+    AuthModule,
   ],
-  controllers: [AuthController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}
