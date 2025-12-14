@@ -4,6 +4,7 @@ import { UsuariosModule } from './modulos/usuarios/usuarios.module';
 import { ClientesModule } from './modulos/clientes/clientes.module';
 import { SeedModule } from './modulos/seed/seed.module';
 import { ProductosModule } from './modulos/productos/productos.module';
+import { AuthController } from 'apps/ms-usuarios/src/modulos/auth/auth.controller';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { ProductosModule } from './modulos/productos/productos.module';
     ProductosModule,
     SeedModule,
   ],
-  controllers: [],
+  controllers: [AuthController],
   providers: [],
 })
 export class AppModule {}
