@@ -8,10 +8,9 @@ import { USUARIOS_SERVICE, envs } from '../../../config';
         ClientsModule.register([
         {
             name: USUARIOS_SERVICE,
-            transport: Transport.TCP,
+            transport: Transport.NATS,
             options: {
-            host: envs.usuarios.host,
-            port: envs.usuarios.port,
+            servers: envs.natsServers,
             },
         },
         ]),

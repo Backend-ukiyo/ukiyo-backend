@@ -2,24 +2,23 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SeedController } from './seed.controller';
 import { SeedService } from './seed.service';
+import { envs, USUARIOS_SERVICE, CLIENTES_SERVICE } from '../../../config';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: 'USUARIOS_SERVICE',
-        transport: Transport.TCP,
+        name: USUARIOS_SERVICE,
+        transport: Transport.NATS,
         options: {
-          host: process.env.USUARIOS_HOST || 'ms_usuarios',
-          port: parseInt(process.env.USUARIOS_PORT || '3001'),
+          servers: envs.natsServers,
         },
       },
       {
-        name: 'CLIENTES_SERVICE',
-        transport: Transport.TCP,
+        name: CLIENTES_SERVICE,
+        transport: Transport.NATS,
         options: {
-          host: process.env.CLIENTES_HOST || 'ms_clientes',
-          port: parseInt(process.env.CLIENTES_PORT || '3000'),
+          servers: envs.natsServers,
         },
       },
     ]),
