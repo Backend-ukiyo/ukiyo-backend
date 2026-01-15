@@ -4,7 +4,7 @@ import { catchError, firstValueFrom } from 'rxjs';
 import { USUARIOS_SERVICE } from '../../../config'; 
 import { LoginUsuarioDto } from '@ukiyo/common';
 
-@Controller('api/auth')
+@Controller('auth')
 export class AuthController {
     constructor(
         @Inject(USUARIOS_SERVICE) private readonly client: ClientProxy,

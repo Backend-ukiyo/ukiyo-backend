@@ -4,7 +4,7 @@ import { catchError } from 'rxjs';
 import { USUARIOS_SERVICE } from '../../../config';
 import { CreateEmpleadoDto } from '@ukiyo/common';
 
-@Controller('api/empleados')
+@Controller('empleados')
 export class EmpleadosController {
     constructor(
         @Inject(USUARIOS_SERVICE) private readonly client: ClientProxy,

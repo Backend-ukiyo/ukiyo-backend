@@ -4,7 +4,7 @@ import { catchError } from 'rxjs';
 import { USUARIOS_SERVICE } from '../../../config';
 import { AuthGuard } from '../auth/guards/auth.guard';
 
-@Controller('api/usuarios')
+@Controller('usuarios')
 export class AccesosController {
     constructor(
         @Inject(USUARIOS_SERVICE) private readonly client: ClientProxy,
