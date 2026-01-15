@@ -21,7 +21,6 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
-      // 🛠️ ESTA ES LA SOLUCIÓN MÁGICA:
       exceptionFactory: (errors) => {
         const messages = errors.map((error) => {
           return `${error.property} - ${Object.values(error.constraints).join(', ')}`;

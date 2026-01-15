@@ -1,6 +1,6 @@
 import 'tsconfig-paths/register';
 import { NestFactory } from '@nestjs/core';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { Transport, MicroserviceOptions, RpcException } from '@nestjs/microservices';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { envs } from '../config';
@@ -23,6 +23,17 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      exceptionFactory: (errors) => {
+              const messages = errors.map((error) => {
+                return `${error.property} - ${Object.values(error.constraints).join(', ')}`;
+              });
+              
+              return new RpcException({
+                message: messages,
+                statusCode: 400,
+                error: 'Bad Request'
+              });
+            },
     }),
   );
   
