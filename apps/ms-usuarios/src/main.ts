@@ -1,21 +1,30 @@
 import { NestFactory } from '@nestjs/core';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { envs } from '../config/envs';
 
 async function bootstrap() {
+  const logger = new Logger('MS-Usuarios');
+
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.NATS,
       options: {
-        host: '0.0.0.0',
-        port: envs.port,
+        port: envs.natsServers,
       },
     },
   );
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
+
   await app.listen();
-  console.log(`Microservicio de usuarios escuchando en el puerto ${envs.port}`);
+  logger.log(`Microservicio de usuarios corriendo en NATS servers: ${envs.natsServers}`);
 }
 bootstrap();

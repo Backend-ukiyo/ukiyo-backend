@@ -12,23 +12,21 @@ import { envs, USUARIOS_SERVICE, CLIENTES_SERVICE } from '../../../config';
     ClientsModule.register([
       {
         name: USUARIOS_SERVICE,
-        transport: Transport.TCP,
+        transport: Transport.NATS,
         options: {
-          host: envs.usuarios.host,
-          port: envs.usuarios.port,
+          servers: envs.natsServers,
         },
       },
       {
         name: CLIENTES_SERVICE,
-        transport: Transport.TCP,
+        transport: Transport.NATS,
         options: {
-          host: envs.clientes.host,
-          port: envs.clientes.port,
+          servers: envs.natsServers,
         },
       },
     ]),
   ],
-  controllers: [UsuariosController, PerfilesController, EmpleadosController, AccesosController,],
+  controllers: [UsuariosController, PerfilesController, EmpleadosController, AccesosController],
   providers: [UsuariosService],
 })
 export class UsuariosModule {}

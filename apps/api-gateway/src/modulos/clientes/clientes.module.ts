@@ -9,10 +9,9 @@ import { ClientesService } from './clientes.service';
     ClientsModule.register([
       {
         name: CLIENTES_SERVICE,
-        transport: Transport.TCP,
+        transport: Transport.NATS,
         options: {
-          host: envs.clientes.host,
-          port: envs.clientes.port,
+          servers: envs.natsServers,
         },
       },
     ]),

@@ -9,10 +9,9 @@ import { envs, PRODUCTOS_SERVICE } from '../../../config';
     ClientsModule.register([
       {
         name: PRODUCTOS_SERVICE,
-        transport: Transport.TCP,
+        transport: Transport.NATS,
         options: {
-          host: envs.productos.host,
-          port: envs.productos.port,
+          servers: envs.natsServers,
         },
       },
     ]),
