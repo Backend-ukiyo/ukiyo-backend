@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { Transport, MicroserviceOptions, RpcException } from '@nestjs/microservices';
 import { AppModule } from './app.module';
 import { envs } from '../config/envs';
 
@@ -20,7 +20,19 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      // forbidNonWhitelisted: true,
+      forbidNonWhitelisted: true,
+      // 🛠️ ESTA ES LA SOLUCIÓN MÁGICA:
+      exceptionFactory: (errors) => {
+        const messages = errors.map((error) => {
+          return `${error.property} - ${Object.values(error.constraints).join(', ')}`;
+        });
+        
+        return new RpcException({
+          message: messages,
+          statusCode: 400,
+          error: 'Bad Request'
+        });
+      },
     }),
   );
 
